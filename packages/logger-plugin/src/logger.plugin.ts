@@ -43,6 +43,7 @@ export class NgxsLoggerPlugin implements NgxsPlugin {
     return next(state, event).pipe(
       tap(nextState => {
         this.log('next state', 'color: #4CAF50; font-weight: bold', nextState);
+        this.log('call stack', 'color: #FFB72F; font-weight: bold', this.getStackTrace());
         try {
           logger.groupEnd();
         } catch (e) {
@@ -75,5 +76,11 @@ export class NgxsLoggerPlugin implements NgxsPlugin {
     }
 
     return ms_ie;
+  }
+  
+  getStackTrace() {
+    var err = new Error();
+    var stack = err.stack || /*old opera*/ err.stacktrace || ( /*IE11*/ console.trace ? console.trace() : "no stack info");
+    return stack;
   }
 }
